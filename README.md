@@ -14,6 +14,8 @@ sudo perf record -F 99 -g -p 54438
 через 10 минут я прервал программы и с помощью репозитория **https://github.com/brendangregg/FlameGraph** построил флеймграф для программы
 `sudo perf script -i ../HW_04_kthread/perf.data | ./stackcollapse-perf.pl | ./flamegraph.pl > ../HW_04_kthread/user.svg`
 и получил *user.svg* 
+![user.svg](https://github.com/CaptainProfit/HW_04_kthread/blob/master/user.svg)
+
 
 # Kernel
 Чтобы запустить вариант такой же программы в ядре надо выполнить `make check-kernel` и запустить запись перфа, но на этот раз процессы которые я ищу называются `my_reader1/2/3` и `my_writer1`. Вот команда :
@@ -34,7 +36,8 @@ sudo perf record -F 99 -g -p 1868,1869,1870
 `scp otus2:~/hw4/kernel.scr .`
 и строю флеймграф для по ней:
 `cat ../HW_04_kthread/kernel.scr | ./stackcollapse-perf.pl | ./flamegraph.pl > ../HW_04_kthread/kernel.svg`
-![[kernel.svg]]
+
+![kernel.svg](https://github.com/CaptainProfit/HW_04_kthread/blob/master/kernel.svg)
 
 В результате у меня получилось два графика работы с процессами - в ядерном и пользовательском пространстве.
 
