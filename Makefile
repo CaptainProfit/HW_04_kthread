@@ -12,12 +12,22 @@ FORMAT_FILES := $(SRC_DIR)/*.c
 kbuild:
 	make -C $(KERNEL_DIR) M=$(PWD) modules
 
-check:
-	rmmod kernel_rw; insmod ./kernel_rw.ko
+unload:
+	sudo rmmod kernel_rw
+
+load: kbuild
+	sudo insmod ./kernel_rw.ko
+
+check-kernel: load
+
+check-user: user
+	./user_rw
 
 format:
 	$(CLANG_FORMAT) $(CLANG_FORMAT_FLAGS) $(FORMAT_FILES)
 
-# Очистка собранных файлов
+user:
+	g++ -g user_rw.c -lpthread -o user_rw
+
 clean:
 	make -C $(KERNEL_DIR) M=$(PWD) clean

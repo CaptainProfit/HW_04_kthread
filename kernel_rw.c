@@ -24,10 +24,11 @@ DEFINE_RWLOCK(my_rwlock);
 DEFINE_SPINLOCK(my_spinlock);
 DEFINE_MUTEX(my_mutex);
 
-static int id1 = 1, id2 = 2, id3 = 3, id4 = 4;
+static int id1 = 1, id2 = 2, /*id3 = 3,*/ id4 = 4;
 static void sleep_spinlock(long ms) {
 	ktime_t start = ktime_get();
-	while(ktime_get() - start < ms * 1000*1000);
+	while(ktime_get() - start < ms * 1000*1000){
+	}
 }
 //---------------------------------------
 // Writer
@@ -40,7 +41,7 @@ static int my_writer_thread(void* args) {
 		pr_info("writer %d tick %d\n", id, i);
 		i++;
 		write_lock(&my_rwlock);
-
+		sleep_spinlock(1000);
 		//msleep(1000);
 		write_unlock(&my_rwlock);
 		msleep(1000);
@@ -98,12 +99,12 @@ static void Start(void) {
 		return;
 	}
 	wake_up_process(my_reader2);
-	my_reader3 = kthread_create(my_reader_thread, &id3, "my_reader3");
+/*	my_reader3 = kthread_create(my_reader_thread, &id3, "my_reader3");
 	if (IS_ERR(my_reader3)) {
 		pr_err("cant launch new thread my_reader3\n");
 		return;
 	}
-	wake_up_process(my_reader3);
+	wake_up_process(my_reader3);*/
 	my_writer1 = kthread_create(my_writer_thread, &id4, "my_writer1");
 	if (IS_ERR(my_writer1)) {
 		pr_err("cant launch new thread my_writer1\n");
@@ -129,10 +130,10 @@ static void Stop(void) {
 		kthread_stop(my_reader2);
 		my_reader2 = NULL;
 	}
-	if (my_reader3 != NULL) {
+	/*if (my_reader3 != NULL) {
 		kthread_stop(my_reader3);
 		my_reader3 = NULL;
-	}
+	}*/
 	if (my_writer1 != NULL) {
 		kthread_stop(my_writer1);
 		my_writer1 = NULL;
