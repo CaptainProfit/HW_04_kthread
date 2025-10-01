@@ -34,6 +34,7 @@ sudo perf record -F 99 -g -p 1868,1869,1870
 `scp otus2:~/hw4/kernel.scr .`
 и строю флеймграф для по ней:
 `cat ../HW_04_kthread/kernel.scr | ./stackcollapse-perf.pl | ./flamegraph.pl > ../HW_04_kthread/kernel.svg`
+![[kernel.svg]]
 
 В результате у меня получилось два графика работы с процессами - в ядерном и пользовательском пространстве.
 
